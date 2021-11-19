@@ -126,7 +126,7 @@ def normalMode(DISPLAYSURF): #일반 모드(일반공격, 크리티컬공격, �
 
   pygame.display.update() #변경된 사항(화면) 업데이트
 
-def specialMode(DISPLAYSURF,turn, target, dmg): #특수 공격(4번버튼 누를시 실행) 버튼 셋 및 특수공격 실행
+def specialMode(DISPLAYSURF, player, target, dmg, poison): #특수 공격(4번버튼 누를시 실행) 버튼 셋 및 특수공격 실행
   specialButtonImg = pygame.image.load("Image/sbuttonImg.png")
   buttonResetImg = pygame.image.load("Image/buttonReset.png")
   DISPLAYSURF.blit(buttonResetImg, (400,440))
@@ -162,6 +162,7 @@ def specialMode(DISPLAYSURF,turn, target, dmg): #특수 공격(4번버튼 누를
   cancel = 0
   picked = 0
   sNum = 0
+  
   while not picked:
     for event in pygame.event.get(): #running 중 키보드나,마우스 입력값(이벤트)을 체크해주는것
       if event.type == QUIT:
@@ -171,26 +172,32 @@ def specialMode(DISPLAYSURF,turn, target, dmg): #특수 공격(4번버튼 누를
         mouse = pygame.mouse.get_pos()
         if s1Button.pressed(mouse) == True:
           #특수능력 1
+          msg, did, poison = player.poison(target, 0)
+          if did == False: continue
           sNum = 3
           picked = 1
         if s2Button.pressed(mouse) == True:
           #특수능력 2 방어력 감소
-          msg = player.def_decrease(target)
+          msg, did = player.def_decrease(target)
+          if did == False: continue
           sNum = 4
           picked = 1 
         if s3Button.pressed(mouse) == True:
           #특수능력 3 공격력 감소
-          msg = player.att_decrease(target)
+          msg, did = player.att_decrease(target)
+          if did == False: continue
           sNum = 5
           picked = 1
         if s4Button.pressed(mouse) == True:
           #특수능력 4 반사
-          msg = player.reflect(target, dmg)
+          msg, did = player.reflect(target, dmg)
+          if did == False: continue
           sNum = 6
           picked = 1
         if s5Button.pressed(mouse) == True:
           #특수능력 5 방어력무시 딜
-          msg = player.absoluteAtt(target)
+          msg, did = player.absoluteAtt(target)
+          if did == False: continue
           sNum = 7
           picked = 1
         if s6Button.pressed(mouse) == True:
@@ -198,7 +205,7 @@ def specialMode(DISPLAYSURF,turn, target, dmg): #특수 공격(4번버튼 누를
           msg = None
           cancel = 1
           picked = 1
-  return cancel, msg, sNum
+  return cancel, msg, sNum, poison
     
 def displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,target1, target2, actionNum, msg, mode):
   reset = pygame.image.load("Image/reset.png")
@@ -287,6 +294,7 @@ def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
   turn = 0
   cancel = 0
   comDmg = 0
+  poison = False
   while(1):
     #플레이어의 선택
     picked = 0
@@ -310,12 +318,23 @@ def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
             displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, 2, msg,1)
             picked = 1
           if SButton.pressed(mouse) == True: #특수버튼 누를때
-            cancel, msg , sNum = specialMode(DISPLAYSURF,turn, com, comDmg)
+            cancel, msg , sNum, poison = specialMode(DISPLAYSURF,player, com, comDmg, poison)
             normalMode(DISPLAYSURF)
             if cancel == 1: continue
-            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, sNum, msg,1)
+            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF, player, com, sNum, msg,1)
             picked = 1
     displayBar(DISPLAYSURF,font, TEXTSURF,playerBar,comBar,player,com)
+
+    #독데미지
+    if poison == True:
+      msg, poison = player.poison(com, 1)
+      #글자 디스플레이에 표시하기
+      reset = pygame.image.load("Image/reset.png")
+      DISPLAYSURF.blit(reset, (30,440))
+      animateText(fpsClock,FPS,msg, font, TEXTSURF, 50, 520, BLACK)
+      time.sleep(0.5)
+
+
 
     #승패판단
     if displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, None,2): break
@@ -329,6 +348,29 @@ def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
     #승패판단
     if displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, None,2): break 
 
+def roulette(player, rank):
+  if rank == 'B':
+    if player.coin > 50:
+      player.coin -= 50
+      up = random.randint(0,4)
+      if player.skill[up] <= 0: player.skill[up] = 1 #랜덤으로 선택된 특수능력 능력치 up
+      else: print('존재하는 능력치의 능력입니다.')
+
+  if rank == 'A':
+    if player.coin > 100:
+      player.coin -= 100
+      up = random.randint(0,4)
+      if player.skill[up] <= 1: player.skill[up] = 2
+      else: print('존재하는 능력치의 능력입니다.')
+
+  if rank == 'S':
+    if player.coin > 150:
+      player.coin -= 150
+      up = random.randint(0,4)
+      if player.skill[up] <= 2: player.skill[up] = 3
+      else: print('존재하는 능력치의 능력입니다.')
+
+
 if __name__ == '__main__':
   #환경변수 세팅
   pygame.init()
@@ -339,7 +381,7 @@ if __name__ == '__main__':
   FPS = 20
   font = pygame.font.SysFont('휴먼모음t', 20)
   #플레이어 및 컴퓨터 능력치 설정
-  player = Player("익현", "남", 500, 50, 70, 1000)
+  gamePlayer = Player("익현", "남", 500, 50, 70, 1000)
   com = Com("전여자친구", "여", 200, 50, 50, 2500, [40,40,20])
   #실행
-  run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com)
+  run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, com)
