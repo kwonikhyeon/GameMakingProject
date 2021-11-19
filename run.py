@@ -17,6 +17,7 @@ BLACK =    (0,   0,   0)
 ALPHA =    (255, 0,   255)
 
 buttonGrid = [[400, 440], [400, 500], [400, 560], [400, 620]]
+sbuttonGrid = [[400, 440],[540,440],[400, 520],[540,520],[400,600],[540,600]]
 
 def drawText(text, font, surface, x, y, color):
 #Simple function for drawing text onto the screen. Function contains expression
@@ -40,7 +41,7 @@ def drawText(text, font, surface, x, y, color):
   surface.blit(textobj2,textrect2)
   pygame.display.update()
 
-def animateText(text, font, surface, x, y, color):
+def animateText(fpsClock, FPS, text, font, surface, x, y, color):
 #Function for printing text. The first block of code acts as a word wrap creator
 #in the event that the string is too long to fit in the window. The animated portion
 #is simply the act of adding each additional charcter after a tick in the FPS clock.
@@ -71,24 +72,27 @@ def animateText(text, font, surface, x, y, color):
     j += 1
 
 class Button():
+  def __init__(self, DISPLAYSURF):
+      self.DISPLAYSURF = DISPLAYSURF
   def assignImage(self, picture):
     self.rect = picture.get_rect()
   def setCoords(self, x,y):
     self.rect.topleft = x,y
   def drawButton(self, picture):
-    DISPLAYSURF.blit(picture, self.rect)
+    self.DISPLAYSURF.blit(picture, self.rect)
   def pressed(self,mouse):
     if self.rect.collidepoint(mouse) == True:
       return True
 
 class HealthBar():
-  def __init__(self,x,y):
+  def __init__(self,DISPLAYSURF,x,y):
     self.position = x,y
     self.negDimensions = (250,10)
     self.posDimensions = [250,10]
+    self.DISPLAYSURF = DISPLAYSURF
   def drawRects(self):
-    pygame.draw.rect(DISPLAYSURF, RED, (self.position, self.negDimensions))
-    pygame.draw.rect(DISPLAYSURF, GREEN, (self.position, self.posDimensions))
+    pygame.draw.rect(self.DISPLAYSURF, RED, (self.position, self.negDimensions))
+    pygame.draw.rect(self.DISPLAYSURF, GREEN, (self.position, self.posDimensions))
     pygame.display.update()
   def updateBar(self, target):
     maxHealth = target.maxhp
@@ -97,19 +101,21 @@ class HealthBar():
     newDimension = healthProportion*self.negDimensions[0]
     self.posDimensions[0] = newDimension
 
-def normalMode(): #일반 모드(일반공격, 크리티컬공격, 힐)버튼 셋
+def normalMode(DISPLAYSURF): #일반 모드(일반공격, 크리티컬공격, 힐)버튼 셋
   testbuttonImg = pygame.image.load("Image/buttonImg.png")
+  buttonResetImg = pygame.image.load("Image/buttonReset.png")
+  DISPLAYSURF.blit(buttonResetImg, (400,440))
 
-  NAButton = Button() #일반공격버튼
+  NAButton = Button(DISPLAYSURF) #일반공격버튼
   NAButton.assignImage(testbuttonImg)
   NAButton.setCoords(buttonGrid[0][0], buttonGrid[0][1])
-  CAButton = Button() #크리티컬공격버튼
+  CAButton = Button(DISPLAYSURF) #크리티컬공격버튼
   CAButton.assignImage(testbuttonImg)
   CAButton.setCoords(buttonGrid[1][0], buttonGrid[1][1])
-  HButton = Button() #힐버튼
+  HButton = Button(DISPLAYSURF) #힐버튼
   HButton.assignImage(testbuttonImg)
   HButton.setCoords(buttonGrid[2][0], buttonGrid[2][1])
-  SButton = Button() #특수능력버튼
+  SButton = Button(DISPLAYSURF) #특수능력버튼
   SButton.assignImage(testbuttonImg)
   SButton.setCoords(buttonGrid[3][0], buttonGrid[3][1])
 
@@ -120,30 +126,42 @@ def normalMode(): #일반 모드(일반공격, 크리티컬공격, 힐)버튼 �
 
   pygame.display.update() #변경된 사항(화면) 업데이트
 
-def specialMode(): #특수 공격(4번버튼 누를시 실행) 버튼 셋 및 특수공격 실행
-  specialButtonImg = pygame.image.load("Image/buttonImg2.png")
+def specialMode(DISPLAYSURF,turn, target, dmg): #특수 공격(4번버튼 누를시 실행) 버튼 셋 및 특수공격 실행
+  specialButtonImg = pygame.image.load("Image/sbuttonImg.png")
+  buttonResetImg = pygame.image.load("Image/buttonReset.png")
+  DISPLAYSURF.blit(buttonResetImg, (400,440))
 
-  s1Button = Button() #일반공격버튼
+  s1Button = Button(DISPLAYSURF) #일반공격버튼
   s1Button.assignImage(specialButtonImg)
-  s1Button.setCoords(buttonGrid[0][0], buttonGrid[0][1])
-  s2Button = Button()
+  s1Button.setCoords(sbuttonGrid[0][0], sbuttonGrid[0][1])
+  s2Button = Button(DISPLAYSURF)
   s2Button.assignImage(specialButtonImg)
-  s2Button.setCoords(buttonGrid[1][0], buttonGrid[1][1])
-  s3Button = Button()
+  s2Button.setCoords(sbuttonGrid[1][0], sbuttonGrid[1][1])
+  s3Button = Button(DISPLAYSURF)
   s3Button.assignImage(specialButtonImg)
-  s3Button.setCoords(buttonGrid[2][0], buttonGrid[2][1])
-  s4Button = Button()
+  s3Button.setCoords(sbuttonGrid[2][0], sbuttonGrid[2][1])
+  s4Button = Button(DISPLAYSURF)
   s4Button.assignImage(specialButtonImg)
-  s4Button.setCoords(buttonGrid[3][0], buttonGrid[3][1])
+  s4Button.setCoords(sbuttonGrid[3][0], sbuttonGrid[3][1])
+  s5Button = Button(DISPLAYSURF)
+  s5Button.assignImage(specialButtonImg)
+  s5Button.setCoords(sbuttonGrid[4][0], sbuttonGrid[4][1])
+  s6Button = Button(DISPLAYSURF)
+  s6Button.assignImage(specialButtonImg)
+  s6Button.setCoords(sbuttonGrid[5][0], sbuttonGrid[5][1])
 
   s1Button.drawButton(specialButtonImg)
   s2Button.drawButton(specialButtonImg)
   s3Button.drawButton(specialButtonImg)
   s4Button.drawButton(specialButtonImg)
+  s5Button.drawButton(specialButtonImg)
+  s6Button.drawButton(specialButtonImg)
 
   pygame.display.update() #변경된 사항(화면) 업데이트
 
+  cancel = 0
   picked = 0
+  sNum = 0
   while not picked:
     for event in pygame.event.get(): #running 중 키보드나,마우스 입력값(이벤트)을 체크해주는것
       if event.type == QUIT:
@@ -153,24 +171,42 @@ def specialMode(): #특수 공격(4번버튼 누를시 실행) 버튼 셋 및 �
         mouse = pygame.mouse.get_pos()
         if s1Button.pressed(mouse) == True:
           #특수능력 1
+          sNum = 3
           picked = 1
         if s2Button.pressed(mouse) == True:
-          #특수능력 2
-          picked = 1
+          #특수능력 2 방어력 감소
+          msg = player.def_decrease(target)
+          sNum = 4
+          picked = 1 
         if s3Button.pressed(mouse) == True:
-          #특수능력 3
+          #특수능력 3 공격력 감소
+          msg = player.att_decrease(target)
+          sNum = 5
           picked = 1
         if s4Button.pressed(mouse) == True:
-          #특수능력 4
+          #특수능력 4 반사
+          msg = player.reflect(target, dmg)
+          sNum = 6
           picked = 1
+        if s5Button.pressed(mouse) == True:
+          #특수능력 5 방어력무시 딜
+          msg = player.absoluteAtt(target)
+          sNum = 7
+          picked = 1
+        if s6Button.pressed(mouse) == True:
+          #돌아가기
+          msg = None
+          cancel = 1
+          picked = 1
+  return cancel, msg, sNum
     
-def displayMessage(target1, target2, actionNum, msg, mode):
+def displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,target1, target2, actionNum, msg, mode):
   reset = pygame.image.load("Image/reset.png")
   DISPLAYSURF.blit(reset, (30,440))
   if mode == 1: #공격 정보 출력 모드
-    action = ['일반공격', '크리티컬공격', '회복']
-    animateText(f"[ {target1.name} ] {action[actionNum]} 선택! ", font, TEXTSURF, 50, 500, BLACK)
-    animateText(msg, font, TEXTSURF, 50, 520, BLACK)
+    action = ['일반공격', '크리티컬공격', '회복', '독', '상대 방어력 감소', '상대 공격력 감소', '반사', '방어무시공격']
+    animateText(fpsClock,FPS,f"[ {target1.name} ] {action[actionNum]} 선택! ", font, TEXTSURF, 50, 500, BLACK)
+    animateText(fpsClock,FPS,msg, font, TEXTSURF, 50, 520, BLACK)
     pygame.display.update()
     time.sleep(1)
   elif mode == 2: #승패 출력 모드
@@ -186,7 +222,7 @@ def displayMessage(target1, target2, actionNum, msg, mode):
       time.sleep(1)
       return True
 
-def displayBar(playerBar, comBar, player, com):
+def displayBar(DISPLAYSURF,font, TEXTSURF,playerBar, comBar, player, com):
     barReset = pygame.image.load("Image/barNumReset.png")
     DISPLAYSURF.blit(barReset, (400,380))
     DISPLAYSURF.blit(barReset, (100,60))
@@ -206,7 +242,7 @@ def displayBar(playerBar, comBar, player, com):
   
 
 def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
-    
+
   background = pygame.image.load("Image/testbackground.png")
   testplayer = pygame.image.load("Image/남캐 뒷모습2.png")
   testcom = pygame.image.load("Image/전여친 빌런2.png")
@@ -217,16 +253,16 @@ def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
 
   testbuttonImg = pygame.image.load("Image/buttonImg.png")
 
-  NAButton = Button() #일반공격버튼
+  NAButton = Button(DISPLAYSURF) #일반공격버튼
   NAButton.assignImage(testbuttonImg)
   NAButton.setCoords(buttonGrid[0][0], buttonGrid[0][1])
-  CAButton = Button() #크리티컬공격버튼
+  CAButton = Button(DISPLAYSURF) #크리티컬공격버튼
   CAButton.assignImage(testbuttonImg)
   CAButton.setCoords(buttonGrid[1][0], buttonGrid[1][1])
-  HButton = Button() #힐버튼
+  HButton = Button(DISPLAYSURF) #힐버튼
   HButton.assignImage(testbuttonImg)
   HButton.setCoords(buttonGrid[2][0], buttonGrid[2][1])
-  SButton = Button() #특수능력버튼
+  SButton = Button(DISPLAYSURF) #특수능력버튼
   SButton.assignImage(testbuttonImg)
   SButton.setCoords(buttonGrid[3][0], buttonGrid[3][1])
 
@@ -237,16 +273,20 @@ def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
 
   pygame.display.update() #변경된 사항(화면) 업데이트
 
-  animateText("야생의 전여친이 나타났다! ", font, TEXTSURF, 50, 500, BLACK)
-  animateText("공격을 시작하자 ", font, TEXTSURF, 50, 530, BLACK)
+  animateText(fpsClock,FPS,"야생의 전여친이 나타났다! ", font, TEXTSURF, 50, 500, BLACK)
+  animateText(fpsClock,FPS,"공격을 시작하자 ", font, TEXTSURF, 50, 530, BLACK)
   pygame.display.update()
 
-  playerBar = HealthBar(400,370)
-  comBar = HealthBar(100,50)
+  playerBar = HealthBar(DISPLAYSURF,400,370)
+  comBar = HealthBar(DISPLAYSURF,100,50)
   playerBar.drawRects()
   comBar.drawRects()
-  displayBar(playerBar,comBar,player,com)
+  displayBar(DISPLAYSURF,font, TEXTSURF,playerBar,comBar,player,com)
 
+  #스킬중에 턴 관련 공격에 적용할 변수
+  turn = 0
+  cancel = 0
+  comDmg = 0
   while(1):
     #플레이어의 선택
     picked = 0
@@ -258,34 +298,36 @@ def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
         elif event.type == MOUSEBUTTONDOWN: #마우스 클릭으로 이벤트 발생
           mouse = pygame.mouse.get_pos()
           if NAButton.pressed(mouse) == True: #일반 공격버튼 누를때
-            msg = player.normalAttack(com)
-            displayMessage(player, com, 0, msg,1)
+            msg, myDmg = player.normalAttack(com)
+            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, 0, msg,1)
             picked = 1
           if CAButton.pressed(mouse) == True: #크리티컬 공격버튼 누를때
-            msg = player.criticalAttack(com)
-            displayMessage(player, com, 1, msg,1)
+            msg, myDmg = player.criticalAttack(com)
+            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, 1, msg,1)
             picked = 1
           if HButton.pressed(mouse) == True: #회복버튼 누를때
             msg = player.heal()
-            displayMessage(player, com, 2, msg,1)
+            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, 2, msg,1)
             picked = 1
           if SButton.pressed(mouse) == True: #특수버튼 누를때
-            specialMode()
-            normalMode()
+            cancel, msg , sNum = specialMode(DISPLAYSURF,turn, com, comDmg)
+            normalMode(DISPLAYSURF)
+            if cancel == 1: continue
+            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, sNum, msg,1)
             picked = 1
-    displayBar(playerBar,comBar,player,com)
+    displayBar(DISPLAYSURF,font, TEXTSURF,playerBar,comBar,player,com)
 
     #승패판단
-    if displayMessage(player, com, None, None,2): break
+    if displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, None,2): break
 
     #컴 선택
-    actionNum, msg = com.action_ai(player)
-    displayMessage(com, player, actionNum, msg, 1)
+    actionNum, msg, comDmg = com.action_ai(player)
+    displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,com, player, actionNum, msg, 1)
 
-    displayBar(playerBar,comBar,player,com)
+    displayBar(DISPLAYSURF,font, TEXTSURF,playerBar,comBar,player,com)
     
     #승패판단
-    if displayMessage(player, com, None, None,2): break 
+    if displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, None,2): break 
 
 if __name__ == '__main__':
   #환경변수 세팅
@@ -297,7 +339,7 @@ if __name__ == '__main__':
   FPS = 20
   font = pygame.font.SysFont('휴먼모음t', 20)
   #플레이어 및 컴퓨터 능력치 설정
-  player = Person("익현", "남", 500, 50, 70, 1000)
+  player = Player("익현", "남", 500, 50, 70, 1000)
   com = Com("전여자친구", "여", 200, 50, 50, 2500, [40,40,20])
   #실행
   run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com)
