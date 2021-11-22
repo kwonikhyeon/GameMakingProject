@@ -125,7 +125,7 @@ def normalMode(DISPLAYSURF): #일반 모드(일반공격, 크리티컬공격, �
 
   pygame.display.update() #변경된 사항(화면) 업데이트
 
-def specialMode(DISPLAYSURF, FPS, TEXTSURF, player, target, dmg, poison): #특수 공격(4번버튼 누를시 실행) 버튼 셋 및 특수공격 실행
+def specialMode(DISPLAYSURF, FPS, fpsClock, font, TEXTSURF, player, target, dmg, poison): #특수 공격(4번버튼 누를시 실행) 버튼 셋 및 특수공격 실행
   PosisonAttackImg = pygame.image.load("Image/독 공격 버튼.png")
   DecreaseAttackPowerImg = pygame.image.load("Image/공격력 감소 버튼.png")
   DecreaseDefenceImg = pygame.image.load("Image/방어력 감소 버튼.png")
@@ -178,7 +178,7 @@ def specialMode(DISPLAYSURF, FPS, TEXTSURF, player, target, dmg, poison): #특�
           #특수능력 1
           msg, did, poison = player.poison(target, 0)
           if did == False:
-            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, "아직 배우지 않은 기술입니다.",3) 
+            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, target, None, "아직 배우지 않은 기술입니다.",3) 
             continue
           sNum = 3
           picked = 1
@@ -186,7 +186,7 @@ def specialMode(DISPLAYSURF, FPS, TEXTSURF, player, target, dmg, poison): #특�
           #특수능력 2 방어력 감소
           msg, did = player.def_decrease(target)
           if did == False: 
-            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, "아직 배우지 않은 기술입니다.",3) 
+            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, target, None, "아직 배우지 않은 기술입니다.",3) 
             continue
           sNum = 4
           picked = 1 
@@ -194,7 +194,7 @@ def specialMode(DISPLAYSURF, FPS, TEXTSURF, player, target, dmg, poison): #특�
           #특수능력 3 공격력 감소
           msg, did = player.att_decrease(target)
           if did == False:
-            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, "아직 배우지 않은 기술입니다.",3)  
+            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, target, None, "아직 배우지 않은 기술입니다.",3)  
             continue
           sNum = 5
           picked = 1
@@ -202,7 +202,7 @@ def specialMode(DISPLAYSURF, FPS, TEXTSURF, player, target, dmg, poison): #특�
           #특수능력 4 반사
           msg, did = player.reflect(target, dmg)
           if did == False:
-            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, "아직 배우지 않은 기술입니다.",3)  
+            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, target, None, "아직 배우지 않은 기술입니다.",3)  
             continue
           sNum = 6
           picked = 1
@@ -210,7 +210,7 @@ def specialMode(DISPLAYSURF, FPS, TEXTSURF, player, target, dmg, poison): #특�
           #특수능력 5 방어력무시 딜
           msg, did = player.absoluteAtt(target)
           if did == False: 
-            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, "아직 배우지 않은 기술입니다.",3) 
+            displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, target, None, "아직 배우지 않은 기술입니다.",3) 
             continue
           sNum = 7
           picked = 1
@@ -268,13 +268,34 @@ def displayBar(DISPLAYSURF,font, TEXTSURF,playerBar, comBar, player, com):
 
 def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
 
-  background = pygame.image.load("Image/testbackground.png")
-  testplayer = pygame.image.load("Image/남캐 뒷모습2.png")
-  testcom = pygame.image.load("Image/전여친 빌런2.png")
+  if com.name == '연구실 교수님':
+    background = pygame.image.load("Image/testbackground.png")
+    playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
+    comImg = pygame.image.load("Image/f교수빌런.png") #임시
+  elif com.name == '밥무새 신입생':
+    background = pygame.image.load("Image/testbackground.png")
+    playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
+    comImg = pygame.image.load("Image/신입생 빌런.png") 
+  elif com.name == '라이벌 동기':
+    background = pygame.image.load("Image/testbackground.png")
+    playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
+    comImg = pygame.image.load("Image/라이벌 빌런.png")
+  elif com.name == '꼰대 선배':
+    background = pygame.image.load("Image/testbackground.png")
+    playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
+    comImg = pygame.image.load("Image/복학생 빌런.png") 
+  elif com.name == '전 여자친구':
+    background = pygame.image.load("Image/testbackground.png")
+    playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
+    comImg = pygame.image.load("Image/전여친 빌런.png") 
+  elif com.name == 'F폭격기 교수님':
+    background = pygame.image.load("Image/testbackground.png")
+    playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
+    comImg = pygame.image.load("Image/f교수빌런.png")  
 
   DISPLAYSURF.blit(background, (0,0)) #윈도우에 이미지 삽입
-  DISPLAYSURF.blit(testplayer, (120,200))
-  DISPLAYSURF.blit(testcom, (450,10))
+  DISPLAYSURF.blit(playerImg, (120,200))
+  DISPLAYSURF.blit(comImg, (450,50))
 
   NAButtonImg = pygame.image.load("Image/일반공격버튼.png")
   CAButtonImg = pygame.image.load("Image/크리티컬공격버튼.png")
@@ -301,7 +322,7 @@ def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
 
   pygame.display.update() #변경된 사항(화면) 업데이트
 
-  animateText(fpsClock,FPS,"야생의 전여친이 나타났다! ", font, TEXTSURF, 50, 500, BLACK)
+  animateText(fpsClock,FPS,f"야생의 [{com.name}]이(가) 나타났다! ", font, TEXTSURF, 50, 500, BLACK)
   animateText(fpsClock,FPS,"공격을 시작하자 ", font, TEXTSURF, 50, 530, BLACK)
   pygame.display.update()
 
@@ -339,13 +360,13 @@ def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
             displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, 2, msg,1)
             picked = 1
           if SButton.pressed(mouse) == True: #특수버튼 누를때
-            cancel, msg , sNum, poison = specialMode(DISPLAYSURF,FPS, TEXTSURF,player, com, comDmg, poison)
+            cancel, msg , sNum, poison = specialMode(DISPLAYSURF,FPS, fpsClock,font,TEXTSURF,player, com, comDmg, poison)
             normalMode(DISPLAYSURF)
             if cancel == 1: continue
             displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF, player, com, sNum, msg,1)
             picked = 1
     displayBar(DISPLAYSURF,font, TEXTSURF,playerBar,comBar,player,com)
-
+    time.sleep(0.2)
     #독데미지
     if poison == True:
       msg, poison = player.poison(com, 1)
@@ -354,21 +375,27 @@ def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
       DISPLAYSURF.blit(reset, (30,440))
       animateText(fpsClock,FPS,msg, font, TEXTSURF, 50, 520, BLACK)
       displayBar(DISPLAYSURF,font, TEXTSURF,playerBar,comBar,player,com)
-      time.sleep(0.5)
+      time.sleep(0.2)
 
 
 
     #승패판단
-    if displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, None,2): break
+    if displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, None,2): 
+      player.hp = player.maxhp
+      com.hp = com.maxhp
+      break
 
     #컴 선택
     actionNum, msg, comDmg = com.action_ai(player)
     displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,com, player, actionNum, msg, 1)
-
     displayBar(DISPLAYSURF,font, TEXTSURF,playerBar,comBar,player,com)
+    time.sleep(0.2)
     
     #승패판단
-    if displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, None,2): break 
+    if displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, None,2): 
+      player.hp = player.maxhp
+      com.hp = com.maxhp
+      break 
 
 def roulette(player, rank): #랜덤뽑기
   if rank == 'B':
