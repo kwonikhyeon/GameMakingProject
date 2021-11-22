@@ -44,7 +44,7 @@ class Player(Person): #플레이어 클래스(특수능력과 이를 이용하�
         super().__init__(name, sex, att, defence, luck, maxhp)
         self.coin = 40
         self.level = 1
-        self.skill = [0,1,1,3,3] #스킬 레벨(상점에서 올릴수 있음)
+        self.skill = [3,1,1,3,3] #스킬 레벨(상점에서 올릴수 있음)
         self.item = [0,0,0,0,0]
         self.poisonTurn = 0
 
@@ -84,6 +84,7 @@ class Player(Person): #플레이어 클래스(특수능력과 이를 이용하�
             return "", False
         percent = [0,0.5,0.75,1] #스킬레벨이 증가할수록 성공확률 증가
         if random.random() < percent[self.skill[3]]:
+            if targetDmg <= 0: return "데미지를 받지 않았습니다! ", True
             self.hp += targetDmg
             if self.hp >= self.maxhp: self.hp = self.maxhp
             dmg = targetDmg - target.defence
