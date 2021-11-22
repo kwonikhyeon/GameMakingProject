@@ -96,7 +96,7 @@ def room(player, screen, background, clock, obj):
             if characterRect.colliderect(objRect[i]):       
                 if obj[i].idNum == 1 or obj[i].idNum == 2 or obj[i].idNum == 3:
                     return obj[i].idNum
-                elif obj[i].idNum == 4:
+                elif obj[i].idNum == 4: #보스 이미지 고유번호
                     print('보스와 싸움!')
                     run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, com)
                     player.position = [obj[i].position[0]-100,obj[i].position[1]]
@@ -148,7 +148,7 @@ if __name__ == '__main__':
     FPS = 20
     font = pygame.font.SysFont('휴먼모음t', 20)
     #플레이어 및 컴퓨터 능력치 설정
-    gamePlayer = Player("익현", "남", 500, 50, 70, 1000)
+    gamePlayer = Player("익현", "남", 500, 50, 70, 1000) #기본값 200,50,50,500 1스텟씩 올릴때마다 50,20,7,100씩 증가
     com = Com("전여자친구", "여", 200, 50, 50, 2500, [40,40,20])
     #####################################################################################
 
