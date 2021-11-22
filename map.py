@@ -135,7 +135,7 @@ if __name__ == '__main__':
     #배경 이미지 불러오기
     mainBackGround = pygame.image.load("mapImage/stage.jpg") #메인룸 배경
     BackGround1 = pygame.image.load("mapImage/testB1.jpg") #보스룸 배경
-    BackGround2 = pygame.image.load("mapImage/학식당 배경.png") #상점 배경
+    BackGround2 = pygame.image.load("mapImage/학식당 배경2.png") #상점 배경
 
     #화면 초기화
     screen, clock = background_init(mainBackGround)
@@ -143,6 +143,7 @@ if __name__ == '__main__':
     #요소(스프라이트)이미지 불러오기
     playerImg = pygame.transform.rotozoom(pygame.image.load("mapImage/character.png"),0 ,0.2) 
     portalImg = pygame.transform.rotozoom(pygame.image.load("mapImage/reset.png"),0 ,0.05)
+    storeDoorImg = pygame.transform.rotozoom(pygame.image.load("mapImage/학식당발판.jpg"),0 ,0.3)
     newbeImg = pygame.transform.rotozoom(pygame.image.load("mapImage/신입생 빌런.png"),0 ,0.2)  #신입생이미지
     rivalImg = pygame.transform.rotozoom(pygame.image.load("mapImage/라이벌 빌런.png"),0 ,0.2)  #라이벌이미지
     elderImg = pygame.transform.rotozoom(pygame.image.load("mapImage/복학생 빌런.png"),0 ,0.2)  #복학생 선배이미지
@@ -156,7 +157,7 @@ if __name__ == '__main__':
     portal1Sprite = Sprite(portalImg, [650,300], 2) #보스로 가는문
     portal2Sprite = Sprite(portalImg, [70,200], 3) #상점으로 가는문
     portal3Sprite = Sprite(portalImg, [20, 350], 1) #보스룸에서 돌아오는문
-    portal4Sprite = Sprite(portalImg, [150, 550], 1) #상점에서 돌아오는문
+    portal4Sprite = Sprite(storeDoorImg, [130, 580], 1) #상점에서 돌아오는문
     bossSprite = Sprite(portalImg, [500, 350], 4) #보스
     storeSprite = Sprite(haksikImg, [150,200], 5) #학식당아줌마(능력치 뽑기)
     newbeSprite = Sprite(newbeImg, [175,260], 6) #신입생
@@ -165,8 +166,7 @@ if __name__ == '__main__':
     exgirlfriendSprite = Sprite(exgirlfriendImg, [540,420], 9) #전여친
     professorFSprite = Sprite(professorFImg, [590,130], 10) #f폭격기교수님
     
-
-
+    #스프라이트 그룹
     room1Obj = [portal1Sprite, portal2Sprite, newbeSprite, 
                 rivalSprite, elderSprite, exgirlfriendSprite, 
                 professorFSprite] #메인 맵 스프라이트 그룹
