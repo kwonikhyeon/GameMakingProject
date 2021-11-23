@@ -232,16 +232,20 @@ def displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,target1, target2, act
     time.sleep(1)
 
   elif mode == 2: #승패 출력 모드
-    if target1.hp <= 0:
+    if target1.hp <= 0: #플레이어 패배
       drawText(f"{target2.name} 이(가) 승리했습니다!",font, TEXTSURF, 50, 500, BLACK)
+      win = False
       pygame.display.update()
       time.sleep(1)
-      return True
-    elif target2.hp <= 0:
+      return True, win
+    elif target2.hp <= 0: #플레이어 승리
       drawText(f"{target1.name} 이(가) 승리했습니다!",font, TEXTSURF, 50, 500, BLACK)
+      win = True
       pygame.display.update()
       time.sleep(1)
-      return True
+      return True, win
+    else: return False, False
+
   elif mode == 3: #일반 출력모드
     animateText(fpsClock, FPS, msg, font, TEXTSURF, 50, 500, BLACK)
     pygame.display.update()
@@ -260,42 +264,45 @@ def displayBar(DISPLAYSURF,font, TEXTSURF,playerBar, comBar, player, com):
       if player.hp <= 0: player.hp = 0
       else: com.hp = 0
 
-    drawText(f"{int(player.hp)} / {player.maxhp} ", font, TEXTSURF, 400, 380, BLACK)
-    drawText(f"{int(com.hp)} / {com.maxhp} ", font, TEXTSURF, 100, 60, BLACK)
+    drawText(f"{int(player.hp)}/{player.maxhp} ", font, TEXTSURF, 400, 380, WHITE)
+    drawText(f"{int(com.hp)}/{com.maxhp} ", font, TEXTSURF, 100, 60, WHITE)
     pygame.display.update()
 
   
 
 def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
-
-  if com.name == '연구실 교수님':
-    background = pygame.image.load("Image/testbackground.png")
+  if com.name == '체온측정 도우미':
+    background = pygame.image.load("Image/튜토리얼 맵.png")
     playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
-    comImg = pygame.image.load("Image/f교수빌런.png") #임시
+    comImg = pygame.image.load("Image/튜토리얼 빌런.png") 
+  elif com.name == '연구실 교수님':
+    background = pygame.image.load("Image/보스 대전맵.png")
+    playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
+    comImg = pygame.image.load("Image/보스.png") 
   elif com.name == '밥무새 신입생':
-    background = pygame.image.load("Image/testbackground.png")
+    background = pygame.image.load("Image/신입생 대전맵.png")
     playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
     comImg = pygame.image.load("Image/신입생 빌런.png") 
   elif com.name == '라이벌 동기':
-    background = pygame.image.load("Image/testbackground.png")
+    background = pygame.image.load("Image/라이벌 대전맵.png")
     playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
     comImg = pygame.image.load("Image/라이벌 빌런.png")
   elif com.name == '꼰대 선배':
-    background = pygame.image.load("Image/testbackground.png")
+    background = pygame.image.load("Image/복학생 대전맵.png")
     playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
     comImg = pygame.image.load("Image/복학생 빌런.png") 
   elif com.name == '전 여자친구':
-    background = pygame.image.load("Image/testbackground.png")
+    background = pygame.image.load("Image/전애인 대전맵.png")
     playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
     comImg = pygame.image.load("Image/전여친 빌런.png") 
   elif com.name == 'F폭격기 교수님':
-    background = pygame.image.load("Image/testbackground.png")
+    background = pygame.image.load("Image/F교수 대전맵.png")
     playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
     comImg = pygame.image.load("Image/f교수빌런.png")  
 
   DISPLAYSURF.blit(background, (0,0)) #윈도우에 이미지 삽입
-  DISPLAYSURF.blit(playerImg, (120,200))
-  DISPLAYSURF.blit(comImg, (450,50))
+  DISPLAYSURF.blit(playerImg, (130,180))
+  DISPLAYSURF.blit(comImg, (430,110))
 
   NAButtonImg = pygame.image.load("Image/일반공격버튼.png")
   CAButtonImg = pygame.image.load("Image/크리티컬공격버튼.png")
@@ -332,11 +339,13 @@ def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
   comBar.drawRects()
   displayBar(DISPLAYSURF,font, TEXTSURF,playerBar,comBar,player,com)
 
-  #스킬중에 턴 관련 공격에 적용할 변수
-  turn = 0
-  cancel = 0
-  comDmg = 0
-  poison = False
+  #스킬관련 변수
+  turn = 0 #독데미지를 입은 턴 수를 저장하는 변수
+  cancel = 0 #특수능력버튼을 누른 후 아무것도 선택하지 않고 기본메뉴로 돌아오는 것을 저장하기 위한 변수
+  comDmg = 0 #이전에 빌런으로부터 받은 데미지를 저장하는 변수
+  poison = False #독 중독 여부를 저장하는 변수
+  gameOver = False #게임 끝 여부를 저장하는 변수
+  win = False #승패 여부를 저장하는 변수
   while(1):
     #플레이어의 선택
     picked = 0
@@ -377,13 +386,17 @@ def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
       displayBar(DISPLAYSURF,font, TEXTSURF,playerBar,comBar,player,com)
       time.sleep(0.2)
 
-
-
     #승패판단
-    if displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, None,2): 
+    gameOver, win = displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, None,2)
+    
+    if gameOver == True: 
       player.hp = player.maxhp
       com.hp = com.maxhp
-      break
+      player.poisonTrun = 0
+      if win == True:
+        return 'win'
+      else:
+        return 'lose'
 
     #컴 선택
     actionNum, msg, comDmg = com.action_ai(player)
@@ -392,10 +405,16 @@ def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
     time.sleep(0.2)
     
     #승패판단
-    if displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, None,2): 
+    gameOver, win = displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,player, com, None, None,2)
+    
+    if gameOver == True: 
       player.hp = player.maxhp
       com.hp = com.maxhp
-      break 
+      player.poisonTrun = 0
+      if win == True:
+        return 'win'
+      else:
+        return 'lose'
 
 def roulette(player, rank): #랜덤뽑기
   if rank == 'B':
