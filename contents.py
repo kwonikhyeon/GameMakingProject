@@ -43,7 +43,7 @@ class Player(Person): #플레이어 클래스(특수능력과 이를 이용하�
     def __init__(self, name, sex, att, defence, luck, maxhp):
         super().__init__(name, sex, att, defence, luck, maxhp)
         self.coin = 40
-        self.level = 1
+        self.level = 6 #플레이어 레벨(레벨이 올라가야 다음 빌런과 대전할수 있음)
         self.skill = [3,1,1,3,3] #스킬 레벨(상점에서 올릴수 있음)
         self.item = [0,0,0,0,0]
         self.poisonTurn = 0
@@ -56,7 +56,7 @@ class Player(Person): #플레이어 클래스(특수능력과 이를 이용하�
                 return "이미 독에 중독되어있습니다. ", True, True
             return "상대방이 독에 중독되었습니다. ", True, True
         
-        percent = [0,0.05,0.07,0.1] #스킬레벨이 증가할수록 피해량 증가
+        percent = [0,0.07,0.1,0.12] #스킬레벨이 증가할수록 피해량 증가
         if mode == 1:
             if self.poisonTurn == 3:
                 self.poisonTurn = 0
@@ -87,7 +87,9 @@ class Player(Person): #플레이어 클래스(특수능력과 이를 이용하�
             if targetDmg <= 0: return "데미지를 받지 않았습니다! ", True
             self.hp += targetDmg
             if self.hp >= self.maxhp: self.hp = self.maxhp
-            dmg = targetDmg - target.defence
+            if targetDmg > target.defence:
+                dmg = targetDmg - target.defence
+            else: dmg = 0
             target.hp -= dmg
             return f"반사 성공! 체력 회복! 데미지 {int(dmg)} ", True
         else: return "반사를 실패했습니다.. ", True
