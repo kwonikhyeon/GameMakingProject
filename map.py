@@ -23,8 +23,6 @@ def background_init(initialBackground):
     screen_width = 700 # 가로 크기
     screen_height = 700 # 세로 크기
     screen = pygame.display.set_mode((screen_width, screen_height))
-    # 화면 타이틀(제목) 설정
-    pygame.display.set_caption("Welcome! Bohak Monster.")
     # FPS 초당 프레임 변수 설정
     clock = pygame.time.Clock()
 
@@ -97,28 +95,67 @@ def room(player, screen, background, clock, obj):
                 if obj[i].idNum == 1 or obj[i].idNum == 2 or obj[i].idNum == 3:
                     return obj[i].idNum
                 elif obj[i].idNum == 4: #보스 이미지 고유번호
-                    run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, boss)
+                    result = run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, boss)
                     player.position = [obj[i].position[0]-100,obj[i].position[1]] #플레이어 위치고정
+                
                 elif obj[i].idNum == 5: #학식당아줌마 이미지 고유번호
                     print('랜덤뽑기!')
                     player.position = [obj[i].position[0],obj[i].position[1]+100] #플레이어 위치고정
+                
                 elif obj[i].idNum == 6: #신입생 이미지 고유번호
-                    run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, newbe)
+                    result = ''
+                    if gamePlayer.level > 0:
+                        result = run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, newbe)
                     player.position = [obj[i].position[0],obj[i].position[1]+100] #플레이어 위치고정
+                    if result == 'win': 
+                        gamePlayer.coin += 10
+                        if gamePlayer.level < 2: gamePlayer.level = 2 #레벨업 후 다음 스테이지 도전가능
+                    elif result == 'lose': gamePlayer.coin -= 10
+                
                 elif obj[i].idNum == 7: #라이벌 이미지 고유번호
-                    run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, rival)
+                    result = ''
+                    if gamePlayer.level > 1:
+                        result = run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, rival)
                     player.position = [obj[i].position[0]-30,obj[i].position[1]-70] #플레이어 위치고정
+                    if result == 'win': 
+                        gamePlayer.coin += 20
+                        if gamePlayer.level < 3: gamePlayer.level = 3
+                    elif result == 'lose': gamePlayer.coin -= 15
+                
                 elif obj[i].idNum == 8: #복학생 이미지 고유번호
-                    run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, elder)
+                    result = ''
+                    if gamePlayer.level > 2:
+                        result = run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, elder)
                     player.position = [obj[i].position[0],obj[i].position[1]+100] #플레이어 위치고정
+                    if result == 'win': 
+                        gamePlayer.coin += 30
+                        if gamePlayer.level < 4: gamePlayer.level = 4
+                    elif result == 'lose': gamePlayer.coin -= 20
+                
                 elif obj[i].idNum == 9: #전여친 이미지 고유번호
-                    run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, exgirlfriend)
+                    result = ''
+                    if gamePlayer.level > 3:
+                        result = run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, exgirlfriend)
                     player.position = [obj[i].position[0]-50,obj[i].position[1]-50] #플레이어 위치고정
+                    if result == 'win': 
+                        gamePlayer.coin += 40
+                        if gamePlayer.level < 5: gamePlayer.level = 5
+                    elif result == 'lose': gamePlayer.coin -= 25
+                
                 elif obj[i].idNum == 10: #F폭격기 교수님 이미지 고유번호
-                    run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, professorF)
-                    player.position = [obj[i].position[0],obj[i].position[1]+100] #플레이어 위치고정
+                    result = ''
+                    if gamePlayer.level > 4:
+                        result = run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, professorF)
+                    player.position = [obj[i].position[0]-10,obj[i].position[1]+90] #플레이어 위치고정
+                    if result == 'win': 
+                        gamePlayer.coin += 50
+                        if gamePlayer.level < 6: gamePlayer.level = 6
+                    elif result == 'lose': gamePlayer.coin -= 30
                 to_x = 0
                 to_y = 0
+
+        if gamePlayer.coin <= 0: #학점을 전부 소진했을 시 게임이 종료된다.
+            return -1
 
         # 캐릭터 및 오브젝트 삽입
         screen.blit(background, (0, 0))
@@ -134,31 +171,35 @@ if __name__ == '__main__':
 
     #배경 이미지 불러오기
     mainBackGround = pygame.image.load("mapImage/stage.jpg") #메인룸 배경
-    BackGround1 = pygame.image.load("mapImage/testB1.jpg") #보스룸 배경
+    BackGround1 = pygame.image.load("mapImage/보스방.png") #보스룸 배경
     BackGround2 = pygame.image.load("mapImage/학식당 배경2.png") #상점 배경
 
     #화면 초기화
     screen, clock = background_init(mainBackGround)
 
     #요소(스프라이트)이미지 불러오기
-    playerImg = pygame.transform.rotozoom(pygame.image.load("mapImage/character.png"),0 ,0.2) 
-    portalImg = pygame.transform.rotozoom(pygame.image.load("mapImage/reset.png"),0 ,0.05)
-    storeDoorImg = pygame.transform.rotozoom(pygame.image.load("mapImage/학식당발판.jpg"),0 ,0.3)
+    playerImg = pygame.transform.rotozoom(pygame.image.load("mapImage/character.png"),0 ,0.2)  #플레이어이미지
+    portalImg = pygame.transform.rotozoom(pygame.image.load("mapImage/reset.png"),0 ,0.05) 
+    storeDoorImg = pygame.transform.rotozoom(pygame.image.load("mapImage/학식당발판.jpg"),0 ,0.3) #학식당발판이미지(문)
+    storeImg = pygame.transform.rotozoom(pygame.image.load("mapImage/학식당.png"),0 ,0.3) #학식건물이미지
+    bossDoorImg = pygame.transform.rotozoom(pygame.image.load("mapImage/보스방 발판.png"),0 ,0.3) #보스룸발판이미지(문)
+    bossRoomImg = pygame.transform.rotozoom(pygame.image.load("mapImage/로봇관.png"),0 ,0.5) #보스룸 입구이미지
     newbeImg = pygame.transform.rotozoom(pygame.image.load("mapImage/신입생 빌런.png"),0 ,0.2)  #신입생이미지
     rivalImg = pygame.transform.rotozoom(pygame.image.load("mapImage/라이벌 빌런.png"),0 ,0.2)  #라이벌이미지
     elderImg = pygame.transform.rotozoom(pygame.image.load("mapImage/복학생 빌런.png"),0 ,0.2)  #복학생 선배이미지
     exgirlfriendImg = pygame.transform.rotozoom(pygame.image.load("mapImage/전여친 빌런.png"),0 ,0.2)  #전여친이미지
     professorFImg = pygame.transform.rotozoom(pygame.image.load("mapImage/f교수빌런.png"),0 ,0.2)  #f폭격기 교수님이미지
     haksikImg = pygame.transform.rotozoom(pygame.image.load("mapImage/학식당 아주머니.png"),0 ,0.2)  #학식당 아주머니 이미지
+    bossImg = pygame.transform.rotozoom(pygame.image.load("mapImage/보스.png"),0 ,0.2)  #보스 이미지
 
 
     #요소(스프라이트)생성
-    playerSprite = Sprite(playerImg, [200,350], 0) #(이미지, 초기좌표)
-    portal1Sprite = Sprite(portalImg, [650,300], 2) #보스로 가는문
-    portal2Sprite = Sprite(portalImg, [70,200], 3) #상점으로 가는문
-    portal3Sprite = Sprite(portalImg, [20, 350], 1) #보스룸에서 돌아오는문
+    playerSprite = Sprite(playerImg, [20,400], 0) #(이미지, 초기좌표)
+    portal1Sprite = Sprite(bossRoomImg, [650,280], 2) #보스로 가는문
+    portal2Sprite = Sprite(storeImg, [45,170], 3) #상점으로 가는문
+    portal3Sprite = Sprite(bossDoorImg, [0, 320], 1) #보스룸에서 돌아오는문
     portal4Sprite = Sprite(storeDoorImg, [130, 580], 1) #상점에서 돌아오는문
-    bossSprite = Sprite(portalImg, [500, 350], 4) #보스
+    bossSprite = Sprite(bossImg, [500, 320], 4) #보스
     storeSprite = Sprite(haksikImg, [150,200], 5) #학식당아줌마(능력치 뽑기)
     newbeSprite = Sprite(newbeImg, [175,260], 6) #신입생
     rivalSprite = Sprite(rivalImg, [320,500], 7) #라이벌
@@ -174,6 +215,7 @@ if __name__ == '__main__':
     room3Obj = [portal4Sprite, storeSprite] #상점 맵 스프라이트 그룹
 
     #####################################################################################
+    #대전 실행 관련 변수 정의
     DISPLAYSURF = pygame.display.set_mode((700, 700)) #이미지 윈도우
     TEXTSURF = pygame.display.set_mode((700,700)) #텍스트 윈도우
     pygame.display.set_caption('Bokhakmon') #윈도우 이름
@@ -182,6 +224,7 @@ if __name__ == '__main__':
     font = pygame.font.SysFont('휴먼모음t', 20)
     #플레이어 및 컴퓨터 능력치 설정
     gamePlayer = Player("익현", "남", 200, 50, 50, 500) #기본값 200,50,50,500 
+    tutorialmob = Com("체온측정 도우미", "여", 80, 80, 100, 400, [50,50,50])
     boss = Com("연구실 교수님", "남", 400, 200, 85, 2000, [80,80,50])
     newbe = Com("밥무새 신입생", "여", 100, 40, 60, 500,[40,30,70])
     rival = Com("라이벌 동기", "남", 130, 50, 40, 550,[20,70,30])
@@ -189,6 +232,9 @@ if __name__ == '__main__':
     exgirlfriend = Com("전 여자친구", "여", 250, 20, 80, 630, [50,50,10])
     professorF = Com("F폭격기 교수님", "남", 330, 80, 30, 1200, [100,30,70])
     #####################################################################################
+
+    #튜토리얼
+    #result = run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, tutorialmob)
 
     #시작지점(메인룸)
     moveTo = 1
@@ -198,9 +244,12 @@ if __name__ == '__main__':
         elif moveTo == 2: #보스룸
             playerSprite.position = [85,320]
             moveTo = room(playerSprite, screen, BackGround1, clock, room2Obj)
-            playerSprite.position = [600,300]
+            playerSprite.position = [580,280]
         elif moveTo == 3: #상점
-            playerSprite.position = [150,470]
+            playerSprite.position = [150,500]
             moveTo = room(playerSprite, screen, BackGround2, clock, room3Obj)
             playerSprite.position = [70,250]
         
+        if moveTo == -1:
+            print('게임종료')
+            break
