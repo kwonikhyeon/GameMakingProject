@@ -252,25 +252,140 @@ def displayMessage(fpsClock,FPS,DISPLAYSURF,font, TEXTSURF,target1, target2, act
     time.sleep(1)
 
 def displayBar(DISPLAYSURF,font, TEXTSURF,playerBar, comBar, player, com):
-    barReset = pygame.image.load("Image/barNumReset.png")
-    DISPLAYSURF.blit(barReset, (400,380))
-    DISPLAYSURF.blit(barReset, (100,60))
-    playerBar.updateBar(player)
-    playerBar.drawRects()
-    comBar.updateBar(com)
-    comBar.drawRects()
+  barReset = pygame.image.load("Image/barNumReset.png")
+  DISPLAYSURF.blit(barReset, (400,380))
+  DISPLAYSURF.blit(barReset, (100,60))
+  playerBar.updateBar(player)
+  playerBar.drawRects()
+  comBar.updateBar(com)
+  comBar.drawRects()
 
-    if player.hp <= 0 or com.hp <= 0:
-      if player.hp <= 0: player.hp = 0
-      else: com.hp = 0
+  if player.hp <= 0 or com.hp <= 0:
+    if player.hp <= 0: player.hp = 0
+    else: com.hp = 0
 
-    drawText(f"{int(player.hp)}/{player.maxhp} ", font, TEXTSURF, 400, 380, WHITE)
-    drawText(f"{int(com.hp)}/{com.maxhp} ", font, TEXTSURF, 100, 60, WHITE)
-    pygame.display.update()
+  drawText(f"{int(player.hp)}/{player.maxhp} ", font, TEXTSURF, 400, 380, WHITE)
+  drawText(f"{int(com.hp)}/{com.maxhp} ", font, TEXTSURF, 100, 60, WHITE)
+  pygame.display.update()
 
+def movie(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
+  player_image=pygame.image.load("Image/남캐.png")
+  text_bar=pygame.image.load("Image/textbar.png")
+  if com.name == '밥무새 신입생' :
+    com_image=pygame.image.load("Image/신입생 빌런.png")
+    movie_background=pygame.image.load("Image/1_background.png")
+  elif com.name == '라이벌 동기' :
+    com_image=pygame.image.load("Image/라이벌 빌런.png")
+    movie_background=pygame.image.load("Image/2_background.png")
+  elif com.name == '꼰대 선배' :
+    com_image=pygame.image.load("Image/복학생 빌런.png")
+    movie_background=pygame.image.load("Image/3_background.png")
+  elif com.name == '전 여자친구' :
+    com_image=pygame.image.load("Image/전여친 빌런.png")
+    movie_background=pygame.image.load("Image/4_background.png")
+  elif com.name == 'F폭격기 교수님' :
+    com_image=pygame.image.load("Image/f교수빌런.png")
+    movie_background=pygame.image.load("Image/5_background.png")
+  elif com.name == '연구실 교수님':
+    com_image=pygame.image.load("Image/보스.png")
+    movie_background=pygame.image.load("Image/6_background.png")
+  
+  DISPLAYSURF.blit(movie_background, (0,0))
+  DISPLAYSURF.blit(player_image, (0,250))
+  DISPLAYSURF.blit(com_image, (430,250))
+  DISPLAYSURF.blit(text_bar, (0,500))
+
+  if com.name == '밥무새 신입생' :
+    story1(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF)
+  elif com.name == '라이벌 동기':
+    story2(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF)
+  elif com.name == '꼰대 선배':
+    story3(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF)
+  elif com.name == '전 여자친구':
+    story4(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF)
+  elif com.name == 'F폭격기 교수님':
+    story5(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF)
+  elif com.name == '연구실 교수님':
+    story6(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF)    
+
+def storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, msg, talkgrid):
+  animateText(fpsClock, FPS, msg, font, TEXTSURF, talkgrid[0], talkgrid[1], BLACK)
+  text_bar=pygame.image.load("Image/textbar.png")
+  next = 0
+  while next == 0:
+    for event in pygame.event.get():
+      if event.type == QUIT:
+        pygame.quit()
+        sys.exit()
+      elif event.type == MOUSEBUTTONDOWN:
+        next = 1
+  DISPLAYSURF.blit(text_bar, (0,500))
+
+def story1(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF):
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "안녕하십니까 선배님!  ", [500, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "밥사주세요!! ", [500, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "어 그래 우리 새내기 김덕자 아니야  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "밥사주세요!!!! ", [500, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "..... ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "밥사주세요!!!!!!!!!!!! ", [500, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "( 싸울까...??? ) ", [20, 500])
+
+def story2(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF):
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "안녕, 인공아 오랜만에 보네 ", [430, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "요새도 공부만 하느라 도서관에만 사니?? ", [390, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "어 그래... 준성아 너는 어떤데?? ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "난 내가 하고싶은거 다 하는편이야 ", [400,500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "그런데도 너랑 1등수 밖에 차이 안나잖아 ", [370,500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "너도 편하게 살아 ~ ~ ~ ~ ~ ~ ~ ", [400,500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "( 싸울까...??? ) ", [20, 500])
+      
+def story3(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF):
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "선배님 안녕하십니까 (_ _) ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "인공이 ~ 내가 제일 좋아하는 후배 인공이 ~ ", [330, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "여자 소개좀 시켜주라 ...ㅎㅎㅎ  ", [380,500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "네...??? ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "여자 소개좀...ㅎㅎㅎㅎ ", [500, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "........", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "여소좀...ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ ", [360, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ ", [360, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "( 싸울까...??? ) ", [20, 500])
   
 
+def story4(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF):
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "( 앗... 1학기때 헤어진 전여친이다....) ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "( 어떻게 대해야 하지....??) ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "( 전 여친이랑 눈 마주침 )  ", [250,500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " ............  ", [530, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " ............  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " ............  ", [530, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " ..........아..안녕..?  ", [20, 500])
+
+
+def story5(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF):
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 인공학생...? ", [500, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 네 교수님! ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 저번주 출석을 하지않았더군...  ", [380,500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 아 그 코로나 접종을 한다고 출석으...ㄹ  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 자네는 F일세  ", [500, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "네...????? ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 자네는 F일세 ", [500, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "ㅈ..저..교수님 그게 아니라...", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 아니면 D+이 좋은가??? ", [470, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "........................", [20, 500])
+
+def story6(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF):
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 여기까지 오다니 대단한 학생이군...  ", [380, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 하지만 순순히 졸업시켜주지는 않을걸세!!  ", [380, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 저도 순순히 돌아갈 생각 없습니다 ! ", [20,500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 졸업시켜 주십시오 !!!! ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 내년에 졸업하게!!!  ", [480, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 졸업!!시켜 주십시오 !!!!!! ", [20, 500])
+
+
 def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
+  
+  movie(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com) #초반 스토리
+  
   if com.name == '체온측정 도우미':
     background = pygame.image.load("Image/튜토리얼 맵.png")
     playerImg = pygame.image.load("Image/남캐 뒷모습2.png")
@@ -417,39 +532,151 @@ def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
         return 'lose'
 
 def roulette(player, rank): #랜덤뽑기
+  skill = ['독 공격', '상대 방어력 감소', '상대 공격력 감소', '반사', '방어력 무시 공격']
+  
   if rank == 'B':
     if player.coin > 50:
       player.coin -= 50
       up = random.randint(0,4)
-      if player.skill[up] <= 0: player.skill[up] = 1 #랜덤으로 선택된 특수능력 능력치 up
-      else: print('존재하는 능력치의 능력입니다.')
+      if player.skill[up] <= 0: 
+        player.skill[up] = 1 #랜덤으로 선택된 특수능력 능력치 up
+        return f'{skill[up]} 의 레벨이 1로 변경되었습니다!!  '
+      else: return '존재하는 능력치의 능력을 뽑았습니다.  '
+    else: return '학점이 부족합니다!  '
 
   if rank == 'A':
     if player.coin > 100:
       player.coin -= 100
       up = random.randint(0,4)
-      if player.skill[up] <= 1: player.skill[up] = 2
-      else: print('존재하는 능력치의 능력입니다.')
+      if player.skill[up] <= 1: 
+        player.skill[up] = 2
+        return f'{skill[up]} 의 레벨이 2로 변경되었습니다!!  '
+      else: return '존재하는 능력치의 능력을 뽑았습니다.  '
+    else: return '학점이 부족합니다!  '
 
   if rank == 'S':
     if player.coin > 150:
       player.coin -= 150
       up = random.randint(0,4)
-      if player.skill[up] <= 2: player.skill[up] = 3
-      else: print('존재하는 능력치의 능력입니다.')
+      if player.skill[up] <= 2: 
+        player.skill[up] = 3
+        return f'{skill[up]} 의 레벨이 3으로 변경되었습니다!!  '
+      else: return '존재하는 능력치의 능력을 뽑았습니다.  '
+    else: return '학점이 부족합니다!  '
 
+def storeRun(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player):
+  storeBackground = pygame.image.load("Image/뽑기 배경.png")
+  BbuttonImg = pygame.image.load("Image/B뽑기.png")
+  AbuttonImg = pygame.image.load("Image/A뽑기.png")
+  SbuttonImg = pygame.image.load("Image/S뽑기.png")
+  gradeRemainImg = pygame.image.load("Image/학점 칸.png")
+  backImg = pygame.image.load("Image/뒤로가기.png")
+  rouletteDisplayImg = pygame.image.load("Image/뽑기 대화창.png")
 
-if __name__ == '__main__':
-  #환경변수 세팅
-  pygame.init()
-  DISPLAYSURF = pygame.display.set_mode((700, 700)) #이미지 윈도우
-  TEXTSURF = pygame.display.set_mode((700,700)) #텍스트 윈도우
-  pygame.display.set_caption('Bokhakmon') #윈도우 이름
-  fpsClock = pygame.time.Clock()
-  FPS = 20
-  font = pygame.font.SysFont('휴먼모음t', 20)
-  #플레이어 및 컴퓨터 능력치 설정
-  gamePlayer = Player("익현", "남", 500, 50, 70, 1000)
-  com = Com("전여자친구", "여", 200, 50, 50, 2500, [40,40,20])
-  #실행
-  run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, com)
+  DISPLAYSURF.blit(storeBackground, (0,0))
+  DISPLAYSURF.blit(gradeRemainImg, (21,21))
+  DISPLAYSURF.blit(rouletteDisplayImg, (121,232))
+
+  Bbutton = Button(DISPLAYSURF)
+  Bbutton.assignImage(BbuttonImg)
+  Bbutton.setCoords(70, 494)
+  Bbutton.drawButton(BbuttonImg)
+  Abutton = Button(DISPLAYSURF)
+  Abutton.assignImage(AbuttonImg)
+  Abutton.setCoords(267, 494)
+  Abutton.drawButton(AbuttonImg)
+  Sbutton = Button(DISPLAYSURF)
+  Sbutton.assignImage(SbuttonImg)
+  Sbutton.setCoords(465, 494)
+  Sbutton.drawButton(SbuttonImg)
+  backButton = Button(DISPLAYSURF)
+  backButton.assignImage(backImg)
+  backButton.setCoords(656,14)
+  backButton.drawButton(backImg)
+
+  pygame.display.update()
+  drawText(f"{player.coin}",font, TEXTSURF, 100, 37, BLACK)
+  drawText(f'현재 능력치는 독, 방.감, 공.감, 반사, 방.무 순으로  ', font, TEXTSURF, 140, 300, BLACK)
+  drawText(f'{player.skill} 입니다.  ', font, TEXTSURF, 140, 340, BLACK)
+  goBack = False
+  while(1):
+    #플레이어의 선택
+    picked = 0
+    while not picked:
+      for event in pygame.event.get(): #running 중 키보드나,마우스 입력값(이벤트)을 체크해주는것
+        if event.type == QUIT: #종료(x)버튼 누르면 창 닫음
+          pygame.quit()
+          sys.exit()
+        elif event.type == MOUSEBUTTONDOWN: #마우스 클릭으로 이벤트 발생
+          mouse = pygame.mouse.get_pos()
+          if Bbutton.pressed(mouse) == True: #B버튼 누를때
+            rank = 'B'
+            picked = 1
+          if Abutton.pressed(mouse) == True: #A버튼 누를때
+            rank = 'A'
+            picked = 1
+          if Sbutton.pressed(mouse) == True: #S버튼 누를때
+            rank = 'S'
+            picked = 1
+          if backButton.pressed(mouse) == True: #뒤로가기 버튼 누를때
+            goBack = True
+            picked = 1
+    
+    if goBack: break
+
+    DISPLAYSURF.blit(rouletteDisplayImg, (121,232))
+    pygame.display.update()
+    msg = roulette(player, rank)
+    DISPLAYSURF.blit(gradeRemainImg, (21,21))
+    drawText(f"{player.coin}",font, TEXTSURF, 100, 37, BLACK)
+    animateText(fpsClock,FPS,msg, font, TEXTSURF, 140, 270, BLACK)
+    animateText(fpsClock,FPS,f'현재 능력치는 독, 방.감, 공.감, 반사, 방.무 순으로  ', font, TEXTSURF, 140, 300, BLACK)
+    animateText(fpsClock,FPS,f'{player.skill} 입니다.  ', font, TEXTSURF, 140, 330, BLACK)
+
+  
+      
+def ending(DISPLAYSURF, TEXTSURF, fpsClock, FPS):
+  EndingImg = pygame.image.load("mapImage/stage.jpg") #승호 이미지
+  EndingButtonImg1 = pygame.image.load("Image/buttonImg.png")
+  EndingButtonImg2 = pygame.image.load("Image/buttonImg2.png")
+
+  DISPLAYSURF.blit(EndingImg, (0,0)) #윈도우에 이미지 삽입
+
+  End1Button = Button(DISPLAYSURF) #엔딩1 버튼
+  End1Button.assignImage(EndingButtonImg1)
+  End1Button.setCoords(100, 350)
+  End1Button.drawButton(EndingButtonImg1)
+
+  End2Button = Button(DISPLAYSURF) #엔딩2 버튼
+  End2Button.assignImage(EndingButtonImg2)
+  End2Button.setCoords(400, 350)
+  End2Button.drawButton(EndingButtonImg2)
+  
+  pygame.display.update()
+  running = False
+
+  picked = 0
+  while not picked:  
+    for event in pygame.event.get(): #running 중 키보드나,마우스 입력값(이벤트)을 체크해주는것
+      if event.type == QUIT: #종료(x)버튼 누르면 창 닫음
+        pygame.quit()
+        sys.exit()
+      elif event.type == MOUSEBUTTONDOWN:
+        mouse = pygame.mouse.get_pos()
+        EndingImg2 = pygame.image.load("mapImage/testB1.jpg")
+        font1 = pygame.font.SysFont('휴먼모음t', 25)
+        DISPLAYSURF.blit(EndingImg2, (0,0)) #윈도우에 이미지 삽입
+
+        if End1Button.pressed(mouse) == True: #엔딩1 : 대학원
+          animateText(fpsClock, FPS, "그렇게 대학원에서 교수님과 5년을 보냈다고 한다....  ", font1, TEXTSURF, 100, 350, WHITE)
+          pygame.display.update()
+          time.sleep(0.2)
+          picked = 1
+
+        elif End2Button.pressed(mouse) == True: #엔딩2 : 취준
+          animateText(fpsClock, FPS, "그렇게 취업준비로 5년을 썼다고 한다;;;;  ", font1, TEXTSURF, 100, 350, WHITE)
+          pygame.display.update()
+          time.sleep(0.2)
+          picked = 1
+
+  return running
