@@ -99,7 +99,7 @@ def room(player, screen, background, clock, obj):
                     player.position = [obj[i].position[0]-100,obj[i].position[1]] #플레이어 위치고정
                 
                 elif obj[i].idNum == 5: #학식당아줌마 이미지 고유번호
-                    print('랜덤뽑기!')
+                    run.storeRun(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer)
                     player.position = [obj[i].position[0],obj[i].position[1]+100] #플레이어 위치고정
                 
                 elif obj[i].idNum == 6: #신입생 이미지 고유번호
@@ -179,7 +179,6 @@ if __name__ == '__main__':
 
     #요소(스프라이트)이미지 불러오기
     playerImg = pygame.transform.rotozoom(pygame.image.load("mapImage/character.png"),0 ,0.2)  #플레이어이미지
-    portalImg = pygame.transform.rotozoom(pygame.image.load("mapImage/reset.png"),0 ,0.05) 
     storeDoorImg = pygame.transform.rotozoom(pygame.image.load("mapImage/학식당발판.jpg"),0 ,0.3) #학식당발판이미지(문)
     storeImg = pygame.transform.rotozoom(pygame.image.load("mapImage/학식당.png"),0 ,0.3) #학식건물이미지
     bossDoorImg = pygame.transform.rotozoom(pygame.image.load("mapImage/보스방 발판.png"),0 ,0.3) #보스룸발판이미지(문)
@@ -218,19 +217,21 @@ if __name__ == '__main__':
     #대전 실행 관련 변수 정의
     DISPLAYSURF = pygame.display.set_mode((700, 700)) #이미지 윈도우
     TEXTSURF = pygame.display.set_mode((700,700)) #텍스트 윈도우
-    pygame.display.set_caption('Bokhakmon') #윈도우 이름
+    pygame.display.set_caption("Welcome! Bohak Monster.") #윈도우 이름
     fpsClock = pygame.time.Clock()
     FPS = 20
     font = pygame.font.SysFont('휴먼모음t', 20)
     #플레이어 및 컴퓨터 능력치 설정
-    gamePlayer = Player("익현", "남", 200, 50, 50, 500) #기본값 200,50,50,500 
-    tutorialmob = Com("체온측정 도우미", "여", 80, 80, 100, 400, [50,50,50])
-    boss = Com("연구실 교수님", "남", 400, 200, 85, 2000, [80,80,50])
-    newbe = Com("밥무새 신입생", "여", 100, 40, 60, 500,[40,30,70])
-    rival = Com("라이벌 동기", "남", 130, 50, 40, 550,[20,70,30])
-    elder = Com("꼰대 선배", "남", 180, 100, 50, 700,[60,20,80])
-    exgirlfriend = Com("전 여자친구", "여", 250, 20, 80, 630, [50,50,10])
-    professorF = Com("F폭격기 교수님", "남", 330, 80, 30, 1200, [100,30,70])
+    gamePlayer = Player("익현", "남", 150, 50, 50, 500) #기본값 150,50,50,500 
+    # 1: 150,50,50,500 2: 162, 54,54, 540 3: 177, 60, 60, 600
+    # 4: 195, 66, 66, 660 5: 215, 73, 73, 730 6: 240, 82, 82, 820 
+    tutorialmob = Com("체온측정 도우미", "여", 30, 50, 50, 350, [50,50,50])
+    boss = Com("연구실 교수님", "남", 300, 200, 85, 1600, [80,80,50])
+    newbe = Com("밥무새 신입생", "여", 100, 40, 60, 450,[40,30,70])
+    rival = Com("라이벌 동기", "남", 150, 50, 30, 550,[50,40,30])
+    elder = Com("꼰대 선배", "남", 120, 120, 50, 800,[60,20,80])
+    exgirlfriend = Com("전 여자친구", "여", 200, 20, 60, 600, [50,70,10])
+    professorF = Com("F폭격기 교수님", "남", 250, 100, 40, 1000, [30,40,30])
     #####################################################################################
 
     #튜토리얼
@@ -242,8 +243,10 @@ if __name__ == '__main__':
         if moveTo == 1: #메인룸
             moveTo = room(playerSprite, screen, mainBackGround, clock, room1Obj)
         elif moveTo == 2: #보스룸
-            playerSprite.position = [85,320]
-            moveTo = room(playerSprite, screen, BackGround1, clock, room2Obj)
+            if gamePlayer.level == 6: #레벨 6이 되지 못하면 보스룸 입장불가
+                playerSprite.position = [85,320]
+                moveTo = room(playerSprite, screen, BackGround1, clock, room2Obj)
+            else: moveTo = 1
             playerSprite.position = [580,280]
         elif moveTo == 3: #상점
             playerSprite.position = [150,500]
