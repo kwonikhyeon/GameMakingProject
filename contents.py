@@ -23,8 +23,8 @@ class Person: #플레이어와 AI에게 공통적으로 들어가는 요소들�
 
     def criticalAttack(self, target): #크리티컬공격
         if random.randint(1,100) in range(1,self.luck-11): #(luck-10)% 확률로 크리티컬 공격 성공
-            if self.att*3 >= target.defence: #내 공격력이 상대 방어력보다 높아야 공격가능
-                dmg = self.att*3 - target.defence
+            if self.att*2 >= target.defence: #내 공격력이 상대 방어력보다 높아야 공격가능
+                dmg = self.att*2 - target.defence
                 target.hp -= dmg
                 return f"크리티컬 공격 성공! 데미지 {int(dmg)} ", dmg
             else:
@@ -33,7 +33,7 @@ class Person: #플레이어와 AI에게 공통적으로 들어가는 요소들�
             return "크리티컬 공격을 실패했습니다. ", 0
 
     def heal(self): #회복
-        self.hp += self.hp*0.3 #현재 체력의 30%만큼 회복
+        self.hp += self.maxhp*0.2 #최대 체력의 20%만큼 회복
         if self.hp >= self.maxhp:
             self.hp = self.maxhp
             return "체력이 가득 찼습니다! "
@@ -42,11 +42,10 @@ class Person: #플레이어와 AI에게 공통적으로 들어가는 요소들�
 class Player(Person): #플레이어 클래스(특수능력과 이를 이용하기 위한 변수 추가)
     def __init__(self, name, sex, att, defence, luck, maxhp):
         super().__init__(name, sex, att, defence, luck, maxhp)
-        self.coin = 40
-        self.level = 6 #플레이어 레벨(레벨이 올라가야 다음 빌런과 대전할수 있음)
-        self.skill = [3,1,1,3,3] #스킬 레벨(상점에서 올릴수 있음)
-        self.item = [0,0,0,0,0]
-        self.poisonTurn = 0
+        self.coin = 2000
+        self.level = 3 #플레이어 레벨(레벨이 올라가야 다음 빌런과 대전할수 있음) 6이 최대치(보스방 입장가능)
+        self.skill = [0,0,0,0,0] #스킬 레벨(상점에서 올릴수 있음) 3이 최대치
+        self.poisonTurn = 0 #독 공격시 턴을 세기위한 변수
 
     def poison(self, target, mode): #독 공격(스킬레벨 인덱스 0)
         if mode == 0:
