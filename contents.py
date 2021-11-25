@@ -37,15 +37,22 @@ class Person: #플레이어와 AI에게 공통적으로 들어가는 요소들�
         if self.hp >= self.maxhp:
             self.hp = self.maxhp
             return "체력이 가득 찼습니다! "
-        return f"체력이 {int(self.hp*0.3)} 회복되었습니다. "
+        return f"체력이 {int(self.maxhp*0.2)} 회복되었습니다. "
 
 class Player(Person): #플레이어 클래스(특수능력과 이를 이용하기 위한 변수 추가)
     def __init__(self, name, sex, att, defence, luck, maxhp):
         super().__init__(name, sex, att, defence, luck, maxhp)
         self.coin = 2000
         self.level = 3 #플레이어 레벨(레벨이 올라가야 다음 빌런과 대전할수 있음) 6이 최대치(보스방 입장가능)
+        self.state = [self.att, self.defence, self.luck, self.maxhp]
         self.skill = [0,0,0,0,0] #스킬 레벨(상점에서 올릴수 있음) 3이 최대치
         self.poisonTurn = 0 #독 공격시 턴을 세기위한 변수
+
+    def levelUp(self):
+        self.att += self.att * (self.level+6) # 레벨이 2, 3, 4, 5, 6이 될수록
+        self.defence += self.defence * (self.level+6) # 능력치가 각각 8, 9, 10, 11, 12%씩 증가
+        self.luck = self.luck * (self.level+6)
+        self.maxhp = self.maxhp * (self.level+6)
 
     def poison(self, target, mode): #독 공격(스킬레벨 인덱스 0)
         if mode == 0:
