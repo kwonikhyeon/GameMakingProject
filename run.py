@@ -666,18 +666,20 @@ def ending(DISPLAYSURF, TEXTSURF, fpsClock, FPS):
         sys.exit()
       elif event.type == MOUSEBUTTONDOWN:
         mouse = pygame.mouse.get_pos()
-        EndingImg2 = pygame.image.load("mapImage/testB1.jpg")
         font1 = pygame.font.SysFont('휴먼모음t', 25)
-        DISPLAYSURF.blit(EndingImg2, (0,0)) #윈도우에 이미지 삽입
 
-        if End1Button.pressed(mouse) == True: #엔딩1 : 대학원
-          animateText(fpsClock, FPS, "그렇게 대학원에서 교수님과 5년을 보냈다고 한다....  ", font1, TEXTSURF, 100, 350, WHITE)
+        if End1Button.pressed(mouse) == True: # 엔딩1 : 대학원
+          EndingImg2 = pygame.image.load("Image/ending1.png")
+          DISPLAYSURF.blit(EndingImg2, (0,0)) # 윈도우에 이미지 삽입
+          animateText(fpsClock, FPS, "그렇게 대학원에서 교수님과 5년을 보냈다고 한다....", font1, TEXTSURF, 100, 350, WHITE)
           pygame.display.update()
           time.sleep(0.2)
           picked = 1
 
-        elif End2Button.pressed(mouse) == True: #엔딩2 : 취준
-          animateText(fpsClock, FPS, "그렇게 취업준비로 5년을 썼다고 한다;;;;  ", font1, TEXTSURF, 100, 350, WHITE)
+        elif End2Button.pressed(mouse) == True: # 엔딩2 : 취준
+          EndingImg2 = pygame.image.load("Image/ending2.png")
+          DISPLAYSURF.blit(EndingImg2, (0,0)) # 윈도우에 이미지 삽입          
+          animateText(fpsClock, FPS, "그렇게 취업준비로 5년을 썼다고 한다;;;;", font1, TEXTSURF, 100, 350, WHITE)
           pygame.display.update()
           time.sleep(0.2)
           picked = 1
