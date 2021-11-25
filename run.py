@@ -596,8 +596,11 @@ def storeRun(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player):
 
   pygame.display.update()
   drawText(f"{player.coin}",font, TEXTSURF, 100, 37, BLACK)
-  drawText(f'현재 능력치는 독, 방.감, 공.감, 반사, 방.무 순으로  ', font, TEXTSURF, 140, 300, BLACK)
-  drawText(f'{player.skill} 입니다.  ', font, TEXTSURF, 140, 340, BLACK)
+  drawText('기본 능력치는 공격력, 방어력, 운, 체력 순으로  ', font, TEXTSURF, 140, 260, BLACK)
+  drawText(f'{player.state} 입니다.  ', font, TEXTSURF, 140, 290, BLACK)
+  drawText('스킬 능력치는 독, 방.감, 공.감, 반사, 방.무 순으로  ', font, TEXTSURF, 140, 320, BLACK) 
+  drawText(f'{player.skill} 입니다.  ', font, TEXTSURF, 140, 350, BLACK)
+  
   goBack = False
   while(1):
     #플레이어의 선택
