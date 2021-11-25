@@ -109,7 +109,9 @@ def room(player, screen, background, clock, obj):
                     player.position = [obj[i].position[0],obj[i].position[1]+100] #플레이어 위치고정
                     if result == 'win': 
                         gamePlayer.coin += 10
-                        if gamePlayer.level < 2: gamePlayer.level = 2 #레벨업 후 다음 스테이지 도전가능
+                        if gamePlayer.level < 2: 
+                            gamePlayer.level = 2 #레벨업 후 다음 스테이지 도전가능
+                            gamePlayer.levelUp() #레벨업에 따른 능력치 상승
                     elif result == 'lose': gamePlayer.coin -= 10
                 
                 elif obj[i].idNum == 7: #라이벌 이미지 고유번호
@@ -119,7 +121,9 @@ def room(player, screen, background, clock, obj):
                     player.position = [obj[i].position[0]-30,obj[i].position[1]-70] #플레이어 위치고정
                     if result == 'win': 
                         gamePlayer.coin += 20
-                        if gamePlayer.level < 3: gamePlayer.level = 3
+                        if gamePlayer.level < 3: 
+                            gamePlayer.level = 3
+                            gamePlayer.levelUp()
                     elif result == 'lose': gamePlayer.coin -= 15
                 
                 elif obj[i].idNum == 8: #복학생 이미지 고유번호
@@ -129,7 +133,9 @@ def room(player, screen, background, clock, obj):
                     player.position = [obj[i].position[0],obj[i].position[1]+100] #플레이어 위치고정
                     if result == 'win': 
                         gamePlayer.coin += 30
-                        if gamePlayer.level < 4: gamePlayer.level = 4
+                        if gamePlayer.level < 4: 
+                            gamePlayer.level = 4
+                            gamePlayer.levelUp()
                     elif result == 'lose': gamePlayer.coin -= 20
                 
                 elif obj[i].idNum == 9: #전여친 이미지 고유번호
@@ -139,7 +145,9 @@ def room(player, screen, background, clock, obj):
                     player.position = [obj[i].position[0]-50,obj[i].position[1]-50] #플레이어 위치고정
                     if result == 'win': 
                         gamePlayer.coin += 40
-                        if gamePlayer.level < 5: gamePlayer.level = 5
+                        if gamePlayer.level < 5: 
+                            gamePlayer.level = 5
+                            gamePlayer.levelUp()
                     elif result == 'lose': gamePlayer.coin -= 25
                 
                 elif obj[i].idNum == 10: #F폭격기 교수님 이미지 고유번호
@@ -149,7 +157,9 @@ def room(player, screen, background, clock, obj):
                     player.position = [obj[i].position[0]-10,obj[i].position[1]+90] #플레이어 위치고정
                     if result == 'win': 
                         gamePlayer.coin += 50
-                        if gamePlayer.level < 6: gamePlayer.level = 6
+                        if gamePlayer.level < 6: 
+                            gamePlayer.level = 6
+                            gamePlayer.levelUp()
                     elif result == 'lose': gamePlayer.coin -= 30
                 to_x = 0
                 to_y = 0
