@@ -43,7 +43,7 @@ class Player(Person): #플레이어 클래스(특수능력과 이를 이용하�
     def __init__(self, name, sex, att, defence, luck, maxhp):
         super().__init__(name, sex, att, defence, luck, maxhp)
         self.coin = 2000
-        self.level = 3 #플레이어 레벨(레벨이 올라가야 다음 빌런과 대전할수 있음) 6이 최대치(보스방 입장가능)
+        self.level = 6 #플레이어 레벨(레벨이 올라가야 다음 빌런과 대전할수 있음) 6이 최대치(보스방 입장가능)
         self.state = [self.att, self.defence, self.luck, self.maxhp]
         self.skill = [0,0,0,0,0] #스킬 레벨(상점에서 올릴수 있음) 3이 최대치
         self.poisonTurn = 0 #독 공격시 턴을 세기위한 변수
