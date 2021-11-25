@@ -97,6 +97,9 @@ def room(player, screen, background, clock, obj):
                 elif obj[i].idNum == 4: #보스 이미지 고유번호
                     result = run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, boss)
                     player.position = [obj[i].position[0]-100,obj[i].position[1]] #플레이어 위치고정
+                    if result == 'win': 
+                        run.ending(DISPLAYSURF, TEXTSURF, fpsClock, FPS)
+                    elif result == 'lose': gamePlayer.coin -= 40
                 
                 elif obj[i].idNum == 5: #학식당아줌마 이미지 고유번호
                     run.storeRun(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer)
@@ -232,7 +235,7 @@ if __name__ == '__main__':
     FPS = 20
     font = pygame.font.SysFont('휴먼모음t', 20)
     #플레이어 및 컴퓨터 능력치 설정
-    gamePlayer = Player("익현", "남", 150, 50, 50, 500) #기본값 150,50,50,500 
+    gamePlayer = Player("익현", "남", 500, 50, 100, 5000) #기본값 150,50,50,500 
     # 1: 150,50,50,500 2: 162, 54,54, 540 3: 177, 60, 60, 600
     # 4: 195, 66, 66, 660 5: 215, 73, 73, 730 6: 240, 82, 82, 820 
     tutorialmob = Com("체온측정 도우미", "여", 30, 50, 50, 350, [50,50,50])
