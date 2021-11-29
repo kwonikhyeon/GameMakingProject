@@ -1,6 +1,9 @@
+from time import sleep, time
 import pygame
+from pygame.constants import QUIT
 import run
 from contents import *
+import sys
 
 class Sprite(pygame.sprite.Sprite):
  
@@ -98,7 +101,8 @@ def room(player, screen, background, clock, obj):
                     result = run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, boss)
                     player.position = [obj[i].position[0]-100,obj[i].position[1]] #플레이어 위치고정
                     if result == 'win': 
-                        run.ending(DISPLAYSURF, TEXTSURF, fpsClock, FPS)
+                        run.ending(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font)
+                        return -1
                     elif result == 'lose': gamePlayer.coin -= 40
                 
                 elif obj[i].idNum == 5: #학식당아줌마 이미지 고유번호
@@ -164,10 +168,19 @@ def room(player, screen, background, clock, obj):
                             gamePlayer.level = 6
                             gamePlayer.levelUp()
                     elif result == 'lose': gamePlayer.coin -= 30
+
+                elif obj[i].idNum == 11: #안내NPC 이미지 고유번호
+                    player.position = [obj[i].position[0],obj[i].position[1]-80] #플레이어 위치고정
+                    run.howTo(DISPLAYSURF, TEXTSURF, font)
+                
                 to_x = 0
                 to_y = 0
 
         if gamePlayer.coin <= 0: #학점을 전부 소진했을 시 게임이 종료된다.
+            gameoverImg = pygame.image.load("mapImage/gameover.png")
+            DISPLAYSURF.blit(gameoverImg, (0,0))
+            pygame.display.update()
+            sleep(0.5)
             return -1
 
         # 캐릭터 및 오브젝트 삽입
@@ -183,6 +196,7 @@ if __name__ == '__main__':
     pygame.init()
 
     #배경 이미지 불러오기
+    startBackGround = pygame.image.load("Image/초기화면.jpg") #시작이미지 
     mainBackGround = pygame.image.load("mapImage/stage.jpg") #메인룸 배경
     BackGround1 = pygame.image.load("mapImage/보스방.png") #보스룸 배경
     BackGround2 = pygame.image.load("mapImage/학식당 배경2.png") #상점 배경
@@ -203,6 +217,7 @@ if __name__ == '__main__':
     professorFImg = pygame.transform.rotozoom(pygame.image.load("mapImage/f교수빌런.png"),0 ,0.2)  #f폭격기 교수님이미지
     haksikImg = pygame.transform.rotozoom(pygame.image.load("mapImage/학식당 아주머니.png"),0 ,0.2)  #학식당 아주머니 이미지
     bossImg = pygame.transform.rotozoom(pygame.image.load("mapImage/보스.png"),0 ,0.2)  #보스 이미지
+    tutorialmobImg = pygame.transform.rotozoom(pygame.image.load("mapImage/튜토리얼 빌런.png"),0 ,0.2)  #게임안내npc 이미지
 
 
     #요소(스프라이트)생성
@@ -218,11 +233,12 @@ if __name__ == '__main__':
     elderSprite = Sprite(elderImg, [355,200], 8) #복학생선배
     exgirlfriendSprite = Sprite(exgirlfriendImg, [540,420], 9) #전여친
     professorFSprite = Sprite(professorFImg, [590,130], 10) #f폭격기교수님
+    tutorialSprite = Sprite(tutorialmobImg, [50,520], 11) #게임안내npc
     
     #스프라이트 그룹
     room1Obj = [portal1Sprite, portal2Sprite, newbeSprite, 
                 rivalSprite, elderSprite, exgirlfriendSprite, 
-                professorFSprite] #메인 맵 스프라이트 그룹
+                professorFSprite, tutorialSprite] #메인 맵 스프라이트 그룹
     room2Obj = [portal3Sprite, bossSprite] #보스 맵 스프라이트 그룹
     room3Obj = [portal4Sprite, storeSprite] #상점 맵 스프라이트 그룹
 
@@ -235,11 +251,11 @@ if __name__ == '__main__':
     FPS = 20
     font = pygame.font.SysFont('휴먼모음t', 20)
     #플레이어 및 컴퓨터 능력치 설정
-    gamePlayer = Player("익현", "남", 500, 50, 100, 5000) #기본값 150,50,50,500 
-    # 1: 150,50,50,500 2: 162, 54,54, 540 3: 177, 60, 60, 600
-    # 4: 195, 66, 66, 660 5: 215, 73, 73, 730 6: 240, 82, 82, 820 
-    tutorialmob = Com("체온측정 도우미", "여", 30, 50, 50, 350, [50,50,50])
-    boss = Com("연구실 교수님", "남", 300, 200, 85, 1600, [80,80,50])
+    gamePlayer = Player("주인공", "남", 15000, 50, 50, 500) #기본값 150,50,50,500 
+    # [1]: 150,50,50,500 [2]: 162, 54,54, 540 [3]: 177, 60, 60, 600
+    # [4]: 195, 66, 66, 660 [5]: 215, 73, 73, 730 [6]: 240, 82, 82, 820 
+    tutorialmob = Com("체온측정 도우미", "여", 60, 50, 50, 250, [50,50,0])
+    boss = Com("연구실 교수님", "남", 300, 0, 85, 100, [80,80,50]) # 300, 150, 85, 1600
     newbe = Com("밥무새 신입생", "여", 100, 40, 60, 450,[40,30,70])
     rival = Com("라이벌 동기", "남", 150, 50, 30, 550,[50,40,30])
     elder = Com("꼰대 선배", "남", 120, 120, 50, 800,[60,20,80])
@@ -247,8 +263,32 @@ if __name__ == '__main__':
     professorF = Com("F폭격기 교수님", "남", 250, 100, 40, 1000, [30,40,30])
     #####################################################################################
 
+    DISPLAYSURF.blit(startBackGround, (0,0))
+    run.drawText("▶ click to start ◀  ",font, TEXTSURF, 250, 300, run.BLACK)
+    pygame.display.update()
+    next = 0
+    while next == 0:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                next = 1
+
     #튜토리얼
     #result = run.run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, gamePlayer, tutorialmob)
+
+    player_image=pygame.image.load("Image/남캐.png")
+    text_bar=pygame.image.load("Image/textbar.png")
+    com_image=pygame.image.load("Image/튜토리얼 빌런.png")
+    movie_background=pygame.image.load("Image/7_background.png")
+
+    DISPLAYSURF.blit(movie_background, (0,0))
+    DISPLAYSURF.blit(player_image, (0,250))
+    DISPLAYSURF.blit(com_image, (430,250))
+    DISPLAYSURF.blit(text_bar, (0,500))
+    #run.story8(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF)
+    pygame.display.update()
 
     #시작지점(메인룸)
     moveTo = 1
