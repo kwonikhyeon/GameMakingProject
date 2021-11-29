@@ -289,6 +289,9 @@ def movie(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
   elif com.name == '연구실 교수님':
     com_image=pygame.image.load("Image/보스.png")
     movie_background=pygame.image.load("Image/6_background.png")
+  elif com.name == '체온측정 도우미':
+    com_image=pygame.image.load("Image/튜토리얼 빌런.png")
+    movie_background=pygame.image.load("Image/7_background.png")
   
   DISPLAYSURF.blit(movie_background, (0,0))
   DISPLAYSURF.blit(player_image, (0,250))
@@ -306,11 +309,17 @@ def movie(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
   elif com.name == 'F폭격기 교수님':
     story5(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF)
   elif com.name == '연구실 교수님':
-    story6(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF)    
+    story6(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF)  
+  elif com.name == '체온측정 도우미':
+    story7(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF)
+    
 
 def storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, msg, talkgrid):
-  animateText(fpsClock, FPS, msg, font, TEXTSURF, talkgrid[0], talkgrid[1], BLACK)
   text_bar=pygame.image.load("Image/textbar.png")
+  DISPLAYSURF.blit(text_bar, (0,500))
+  drawText("▶ click to next  ",font, TEXTSURF, 500, 650, BLACK)
+  animateText(fpsClock, FPS, msg, font, TEXTSURF, talkgrid[0], talkgrid[1], BLACK)
+  
   next = 0
   while next == 0:
     for event in pygame.event.get():
@@ -319,7 +328,7 @@ def storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, msg, talkgrid):
         sys.exit()
       elif event.type == MOUSEBUTTONDOWN:
         next = 1
-  DISPLAYSURF.blit(text_bar, (0,500))
+  
 
 def story1(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF):
   storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "안녕하십니까 선배님!  ", [500, 500])
@@ -367,20 +376,55 @@ def story5(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF):
   storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 저번주 출석을 하지않았더군...  ", [380,500])
   storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 아 그 코로나 접종을 한다고 출석으...ㄹ  ", [20, 500])
   storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 자네는 F일세  ", [500, 500])
-  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "네...????? ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 네...????? ", [20, 500])
   storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 자네는 F일세 ", [500, 500])
-  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "ㅈ..저..교수님 그게 아니라...", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " ㅈ..저..교수님 그게 아니라...", [20, 500])
   storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 아니면 D+이 좋은가??? ", [470, 500])
   storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "........................", [20, 500])
 
+
 def story6(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF):
   storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 여기까지 오다니 대단한 학생이군...  ", [380, 500])
-  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 하지만 순순히 졸업시켜주지는 않을걸세!!  ", [380, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 하지만 순순히 졸업시켜주지는 않을걸세!!  ", [360, 500])
   storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 저도 순순히 돌아갈 생각 없습니다 ! ", [20,500])
   storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 졸업시켜 주십시오 !!!! ", [20, 500])
   storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 내년에 졸업하게!!!  ", [480, 500])
   storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, " 졸업!!시켜 주십시오 !!!!!! ", [20, 500])
 
+
+def story7(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF):
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "(지각해서 뛰어옴)  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "삑 37.5도 입니다. 못들어갑니다.  ", [380, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "뛰어와서 그래요..한번만 봐주세요. 수업 3분남았어요ㅜㅜ  ", [20,500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "안됩니다. 못들어갑니다.  ", [480, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "아...제발요 이제 2분남았어요...  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "못들어갑니다.  ", [480, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "ㅜㅜㅜㅜ  ", [20, 500])
+
+
+def story8(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF):
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "킄...어쩔수 없지..들어가세요  ", [480, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "다시 저를 찾아오신다면 꿀팁 알려드릴게요  ", [300, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "꼭 찾아오세요ㅎㅎ  ", [480, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "오오 감사합니다!  ", [20, 500])
+
+def story9(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF): # 엔딩 1스토리
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "교수님께 승리한 후 난, (교수님께서 연구실에 들어오지 않겠나?)  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "라는 말을 듣고 대학원을 진학하게 되었고...  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "깨닫게 되었다...  ", [20,500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "대학생들의 수많은 과제들, 시험지 채점을 담당하는게 얼마나 어려운 일인지를...  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "이제 글씨만 봐도 토나올지경이다...  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "나... 대학생 때로 돌아갈래~~~!!!  ", [20, 500])
+
+def story10(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF): # 엔딩 2스토리
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "교수님께 승리한 후, 졸업을 한 나는,  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "(얼른 취직하고 돈 벌어서 여친도 사귀고  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "결혼에 골인해 행복한 가정을 꾸려야지 ㅎㅎㅎ)  ", [20,500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "라는 마음에 곧바로 취직을 했고,  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "맛 보고 말았다...  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "회사는 지독한 야근과 퇴근 후  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "벌어지는 회식과의 전쟁인 것을...  ", [20, 500])
+  storyNext(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF, "나,,, 대학생 때로 돌아갈래~~~!!!  ", [20, 500])
 
 def run(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player, com):
   
@@ -564,6 +608,34 @@ def roulette(player, rank): #랜덤뽑기
       else: return '존재하는 능력치의 능력을 뽑았습니다.  '
     else: return '학점이 부족합니다!  '
 
+def howTo(DISPLAYSURF, TEXTSURF, font): #npc안내창 출력함수
+  howToImg1=pygame.image.load("Image/안내창1.jpg")
+  howToImg2=pygame.image.load("Image/안내창2.jpg")
+
+  DISPLAYSURF.blit(howToImg1, (0,0))
+  drawText("▶ click to next  ",font, TEXTSURF, 500, 420, WHITE)
+  pygame.display.update()
+  next = 0
+  while next == 0:
+    for event in pygame.event.get():
+      if event.type == QUIT:
+        pygame.quit()
+        sys.exit()
+      elif event.type == MOUSEBUTTONDOWN:
+        next = 1
+  DISPLAYSURF.blit(howToImg2, (0,0))
+  drawText("▶ click to end  ",font, TEXTSURF, 500, 420, WHITE)
+  pygame.display.update()
+  next = 0
+  while next == 0:
+    for event in pygame.event.get():
+      if event.type == QUIT:
+        pygame.quit()
+        sys.exit()
+      elif event.type == MOUSEBUTTONDOWN:
+        next = 1
+
+
 def storeRun(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player):
   storeBackground = pygame.image.load("Image/뽑기 배경.png")
   BbuttonImg = pygame.image.load("Image/B뽑기.png")
@@ -638,21 +710,35 @@ def storeRun(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font, player):
 
   
       
-def ending(DISPLAYSURF, TEXTSURF, fpsClock, FPS):
-  EndingImg = pygame.image.load("mapImage/stage.jpg") #승호 이미지
-  EndingButtonImg1 = pygame.image.load("Image/buttonImg.png")
-  EndingButtonImg2 = pygame.image.load("Image/buttonImg2.png")
+def ending(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font):
+  bossEndingImg = pygame.image.load("Image/엔딩전대화.png")
+  DISPLAYSURF.blit(bossEndingImg, (0,0)) #윈도우에 이미지 삽입
+  pygame.display.update()
+  animateText(fpsClock,FPS,"크억...그래..졸업 하시게..  ", font, TEXTSURF, 450, 420, BLACK)
+
+  next = 0
+  while not next:  
+    for event in pygame.event.get(): #running 중 키보드나,마우스 입력값(이벤트)을 체크해주는것
+      if event.type == QUIT: #종료(x)버튼 누르면 창 닫음
+        pygame.quit()
+        sys.exit()
+      elif event.type == MOUSEBUTTONDOWN:
+        next = 1
+
+  EndingImg = pygame.image.load("mapImage/졸업배경.jpg") 
+  EndingButtonImg1 = pygame.image.load("Image/엔딩버튼.png")
+  EndingButtonImg2 = pygame.image.load("Image/엔딩버튼.png")
 
   DISPLAYSURF.blit(EndingImg, (0,0)) #윈도우에 이미지 삽입
 
   End1Button = Button(DISPLAYSURF) #엔딩1 버튼
   End1Button.assignImage(EndingButtonImg1)
-  End1Button.setCoords(100, 350)
+  End1Button.setCoords(100, 76)
   End1Button.drawButton(EndingButtonImg1)
 
   End2Button = Button(DISPLAYSURF) #엔딩2 버튼
   End2Button.assignImage(EndingButtonImg2)
-  End2Button.setCoords(400, 350)
+  End2Button.setCoords(420, 76)
   End2Button.drawButton(EndingButtonImg2)
   
   pygame.display.update()
@@ -666,20 +752,18 @@ def ending(DISPLAYSURF, TEXTSURF, fpsClock, FPS):
         sys.exit()
       elif event.type == MOUSEBUTTONDOWN:
         mouse = pygame.mouse.get_pos()
-        font1 = pygame.font.SysFont('휴먼모음t', 25)
 
         if End1Button.pressed(mouse) == True: # 엔딩1 : 대학원
           EndingImg2 = pygame.image.load("Image/ending1.png")
           DISPLAYSURF.blit(EndingImg2, (0,0)) # 윈도우에 이미지 삽입
-          animateText(fpsClock, FPS, "그렇게 대학원에서 교수님과 5년을 보냈다고 한다....", font1, TEXTSURF, 100, 350, WHITE)
+          story9(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF) # 엔딩 1스토리
           pygame.display.update()
-          time.sleep(0.2)
           picked = 1
 
         elif End2Button.pressed(mouse) == True: # 엔딩2 : 취준
-          EndingImg2 = pygame.image.load("Image/ending2.png")
+          EndingImg2 = pygame.image.load("Image/엔딩2.png")
           DISPLAYSURF.blit(EndingImg2, (0,0)) # 윈도우에 이미지 삽입          
-          animateText(fpsClock, FPS, "그렇게 취업준비로 5년을 썼다고 한다;;;;", font1, TEXTSURF, 100, 350, WHITE)
+          story10(fpsClock, FPS,DISPLAYSURF,font,TEXTSURF) # 엔딩 2스토리
           pygame.display.update()
           time.sleep(0.2)
           picked = 1
