@@ -102,6 +102,10 @@ def room(player, screen, background, clock, obj):
                     player.position = [obj[i].position[0]-100,obj[i].position[1]] #플레이어 위치고정
                     if result == 'win': 
                         run.ending(DISPLAYSURF, TEXTSURF, fpsClock, FPS, font)
+                        gameoverImg = pygame.image.load("mapImage/graduation.png")
+                        DISPLAYSURF.blit(gameoverImg, (0,0))
+                        pygame.display.update()
+                        sleep(1)
                         return -1
                     elif result == 'lose': gamePlayer.coin -= 40
                 
@@ -180,7 +184,7 @@ def room(player, screen, background, clock, obj):
             gameoverImg = pygame.image.load("mapImage/gameover.png")
             DISPLAYSURF.blit(gameoverImg, (0,0))
             pygame.display.update()
-            sleep(0.5)
+            sleep(1)
             return -1
 
         # 캐릭터 및 오브젝트 삽입
